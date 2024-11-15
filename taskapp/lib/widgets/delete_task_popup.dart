@@ -65,7 +65,7 @@ void showDeleteTaskPopup(BuildContext context, WidgetRef ref, String taskId,
                             message: 'Task deleted successfully!',
                           ),
                         );
-                        onPressed: () => context.pop();
+                        context.pop();
                       }).catchError((error) {
                         showTopSnackBar(
                           Overlay.of(context),

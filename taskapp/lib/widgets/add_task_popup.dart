@@ -83,7 +83,7 @@ void showAddTaskPopup(BuildContext context, WidgetRef ref, String userId) {
                           message: 'Task added successfully!',
                         ),
                       );
-                    onPressed: () => context.pop();
+                      context.pop();
                     }).catchError((error) {
                       showTopSnackBar(
                         Overlay.of(context),

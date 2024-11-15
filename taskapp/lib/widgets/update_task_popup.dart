@@ -82,7 +82,7 @@ void showUpdateTaskPopup(
             Expanded(
               child: CustomButton(
                 text: 'Cancel',
-               onPressed: () => context.pop(),
+                onPressed: () => context.pop(),
                 color: AppColors.grey,
               ),
             ),
@@ -91,40 +91,53 @@ void showUpdateTaskPopup(
               child: CustomButton(
                 text: 'Update',
                 onPressed: () async {
-                  final updatedTask = TaskModel(
-                    id: task.id,
-                    title: titleController.text,
-                    description: descriptionController.text,
-                    completed: completed,
-                    userId: task.userId,
-                  );
-                  try {
-                    await ref
-                        .read(taskViewModelProvider(userId).notifier)
-                        .updateTask(updatedTask);
-                    onPressed: () => context.pop();
-
-                    showTopSnackBar(
-                      Overlay.of(context),
-                      // ignore: prefer_const_constructors
-                      CustomSnackBar.success(
-                        message: 'Task updated successfully!',
-                      ),
+                  if (titleController.text != task.title ||
+                      descriptionController.text != task.description ||
+                      completed != task.completed) {
+                    final updatedTask = TaskModel(
+                      id: task.id,
+                      title: titleController.text,
+                      description: descriptionController.text,
+                      completed: completed,
+                      userId: task.userId,
                     );
-                  } catch (e) {
-                   onPressed: () => context.pop();
 
+                    try {
+                      // Update task
+                      await ref
+                          .read(taskViewModelProvider(userId).notifier)
+                          .updateTask(updatedTask);
+
+                      context.pop();
+
+                      showTopSnackBar(
+                        Overlay.of(context),
+                        CustomSnackBar.success(
+                          message: 'Task updated successfully!',
+                        ),
+                      );
+                    } catch (e) {
+                      context.pop();
+
+                      showTopSnackBar(
+                        Overlay.of(context),
+                        CustomSnackBar.error(
+                          message: 'Failed to update task. Please try again.',
+                        ),
+                      );
+                    }
+                  } else {
                     showTopSnackBar(
                       Overlay.of(context),
-                      CustomSnackBar.error(
-                        message: 'Failed to update task. Please try again.',
+                      CustomSnackBar.info(
+                        message: 'No changes detected, task was not updated.',
                       ),
                     );
                   }
                 },
                 color: AppColors.primaryColor,
               ),
-            ),
+            )
           ],
         ),
       ],
