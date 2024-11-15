@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:taskapp/models/task/task_model.dart';
+import 'package:go_router/go_router.dart';
 import 'package:taskapp/viewmodels/auth_viewmodel.dart';
 import 'package:taskapp/viewmodels/task_viewmodel.dart';
 import 'package:taskapp/widgets/custom_button.dart';
-import 'package:taskapp/widgets/custom_text_field.dart';
 import 'package:taskapp/widgets/task_card.dart';
 import 'package:taskapp/widgets/add_task_popup.dart';
 import 'package:taskapp/widgets/delete_task_popup.dart';
@@ -21,7 +20,7 @@ class TaskListScreen extends ConsumerWidget {
     }
 
     final userId = user.id;
-    final tasks = ref.watch(taskViewModelProvider(userId));
+    final tasks = ref.watch(taskViewModelProvider(userId!));
     return Scaffold(
       appBar: AppBar(
         title: Text('weclome back ${user.name}'),
@@ -49,7 +48,7 @@ class TaskListScreen extends ConsumerWidget {
                         task: task,
                         onDelete: () {
                           showDeleteTaskPopup(
-                              context, ref, task.id, task.title, userId);
+                              context, ref, task.id!, task.title!, userId);
                         },
                         onUpdate: () {
                           showUpdateTaskPopup(context, ref, task, userId);
@@ -59,7 +58,8 @@ class TaskListScreen extends ConsumerWidget {
                   ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(
+                top: 8.0, left: 66, right: 66, bottom: 33),
             child: Align(
               alignment: Alignment.bottomCenter,
               child: CustomButton(
@@ -68,7 +68,8 @@ class TaskListScreen extends ConsumerWidget {
                 onPressed: () async {
                   try {
                     await ref.read(authViewModelProvider.notifier).signOut();
-                    Navigator.pushReplacementNamed(context, '/login');
+                   context.go('/login');
+
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Sign out failed: $e')),

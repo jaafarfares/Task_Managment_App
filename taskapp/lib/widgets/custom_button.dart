@@ -8,12 +8,12 @@ class CustomButton extends StatelessWidget {
   final double borderRadius;
 
   const CustomButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
     this.color = AppColors.primaryColor,
     this.borderRadius = 12.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class CustomButton extends StatelessWidget {
       child: Center(
         child: Text(
           text,
-          style: const TextStyle(fontSize: 18, color: AppColors.white),
+          style: const TextStyle(fontSize: 18, color: AppColors.black),
         ),
       ),
     );

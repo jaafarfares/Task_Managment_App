@@ -2,29 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user/user_model.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/user/user_model.dart';
-
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Load user data from SharedPreferences (for app restart)
-  // Future<UserModel?> loadUserFromPrefs() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? userId = prefs.getString('userId');
-  //   if (userId != null) {
-  //     return await getUserFromFirestore(userId);
-  //   }
-  //   return null;
-  // }
-
   Future<UserModel?> getUserFromFirestore(String userId) async {
     try {
-      DocumentSnapshot doc = await _firestore.collection('users').doc(userId).get();
+      DocumentSnapshot doc =
+          await _firestore.collection('users').doc(userId).get();
       if (doc.exists) {
-        return UserModel.fromFirestore(doc); 
+        return UserModel.fromFirestore(doc);
       }
     } catch (e) {
       rethrow;
@@ -34,24 +21,26 @@ class AuthService {
 
   Future<UserModel?> signUp(String name, String email, String password) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       final user = userCredential.user;
+
       if (user != null) {
         await _firestore.collection('users').doc(user.uid).set({
           'name': name,
           'email': email,
         });
 
-        // Save user data in SharedPreferences (commented out for now)
-        // SharedPreferences prefs = await SharedPreferences.getInstance();
-        // prefs.setString('userId', user.uid);
-
         return UserModel(id: user.uid, name: name, email: email);
       }
+    } on FirebaseAuthException catch (e) {
+      print("Firebase Auth error during sign up: $e");
+      rethrow;
     } catch (e) {
+      print("Unexpected error during sign up: $e");
       rethrow;
     }
     return null;
@@ -65,11 +54,13 @@ class AuthService {
       );
       final user = userCredential.user;
       if (user != null) {
-        // SharedPreferences prefs = await SharedPreferences.getInstance();
-        // prefs.setString('userId', user.uid); // Commented out for now
         return await getUserFromFirestore(user.uid);
       }
+    } on FirebaseAuthException catch (e) {
+      print("Firebase Auth error during sign in: $e");
+      rethrow;
     } catch (e) {
+      print("Unexpected error during sign in: $e");
       rethrow;
     }
     return null;
@@ -77,10 +68,6 @@ class AuthService {
 
   Future<void> signOut() async {
     await _auth.signOut();
-
-    // Clear SharedPreferences (commented out for now)
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.remove('userId');
   }
 
   Stream<UserModel?> authStateChanges() {

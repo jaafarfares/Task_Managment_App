@@ -25,9 +25,14 @@ class TaskViewModel extends StateNotifier<List<TaskModel>> {
     await _taskService.deleteTask(taskId);
   }
 
-  Future<void> updateTask(TaskModel updatedTask) async {
+ Future<void> updateTask(TaskModel updatedTask) async {
+  try {
     await _taskService.updateTask(updatedTask);
+  } catch (e) {
+    throw Exception('Failed to update task');
   }
+}
+
 }
 
 final taskViewModelProvider =

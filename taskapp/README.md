@@ -1,16 +1,26 @@
-# taskapp
+ # Task Management App
+### The Task Management App is a Flutter-based mobile application designed to help users efficiently manage their tasks. It provides features for creating, updating, and organizing tasks with ease. The app supports multiple task categories and allows for seamless interaction through a clean, intuitive UI.
 
-A new Flutter project.
+## Key Features:
+Task creation, editing, and deletion
+Task categorization and prioritization
+User-friendly and responsive interface
+Architecture:
+This app follows the MVVM (Model-View-ViewModel) architecture, ensuring separation of concerns and maintainable code. The app leverages Provider for state management and uses various Flutter packages for efficient task management.
 
-## Getting Started
+Packages Used:
+firebase_core for Firebase initialization
+provider for state management
+flutter_local_notifications for task reminders
+cloud_firestore for storing tasks in the cloud
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Screenshots
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<div style="display: flex; justify-content: space-between;">
+  <img src="1.png" alt="Screenshot 1" width="200"/>
+  <img src="2.png" alt="Screenshot 2" width="200"/>
+  <img src="3.png" alt="Screenshot 3" width="200"/>
+
+</div>

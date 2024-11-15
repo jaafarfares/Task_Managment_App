@@ -1,46 +1,35 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class UserModel {
-  final String id;
-  final String name;
-  final String email;
+part 'user_model.freezed.dart';
+part 'user_model.g.dart';
 
-  UserModel({
-    required this.id,
-    required this.name,
-    required this.email,
-  });
+@freezed
+class UserModel with _$UserModel {
+  const factory UserModel({
+    required String? id,
+    required String? name,
+    required String? email,
+  }) = _UserModel;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-    };
-  }
-
-  factory UserModel.fromMap(Map<String, dynamic> map, String userId) {
-    return UserModel(
-      id: userId,
-      name: map['name'] ?? '',
-      email: map['email'] ?? '',
-    );
-  }
-
-  static UserModel fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return UserModel.fromMap(data, doc.id);
-  }
+  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
   static Future<UserModel?> getUser(String userId) async {
     try {
       final doc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
       if (doc.exists) {
-        return UserModel.fromMap(doc.data()!, doc.id);
+        return UserModel.fromFirestore(doc);
       }
     } catch (e) {
       print('Error fetching user: $e');
     }
     return null;
   }
+
+  static UserModel fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return UserModel.fromJson(data).copyWith(id: doc.id);
+  }
 }
+

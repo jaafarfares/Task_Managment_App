@@ -1,28 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class TaskModel {
-  final String id;
-  final String title;
-  final String description;
-  final bool completed;
-  final String userId;
+part 'task_model.freezed.dart';
+part 'task_model.g.dart';
 
-  TaskModel({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.completed,
-    required this.userId,
-  });
+@freezed
+class TaskModel with _$TaskModel {
+  const factory TaskModel({
+    required String? id,
+    required String? title,
+    required String? description,
+    required bool? completed,
+    required String? userId,
+  }) = _TaskModel;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'description': description,
-      'completed': completed,
-      'userId': userId,
-    };
-  }
+  factory TaskModel.fromJson(Map<String, dynamic> json) =>
+      _$TaskModelFromJson(json);
 
   factory TaskModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
@@ -34,4 +27,5 @@ class TaskModel {
       userId: data['userId'] ?? '',
     );
   }
+
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 
 class SplashScreen extends ConsumerWidget {
@@ -8,20 +9,12 @@ class SplashScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authViewModelProvider);
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (user != null) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/tasks',
-          (route) => false, 
-        );
+        context.go('/tasks');
       } else {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/login',
-          (route) => false, 
-        );
+        context.go('/login');
       }
     });
 

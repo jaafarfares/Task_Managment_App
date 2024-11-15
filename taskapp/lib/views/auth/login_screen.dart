@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:taskapp/utils/colors.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../widgets/custom_text_field.dart';
@@ -59,7 +60,7 @@ class LoginScreen extends ConsumerWidget {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/register');
+                    context.go('/register');
                   },
                   child: const Text(
                     "Don't have an account? Register",
@@ -71,13 +72,7 @@ class LoginScreen extends ConsumerWidget {
               CustomButton(
                 text: isLoading ? 'Logging in...' : 'Login',
                 onPressed: () async {
-                  try {
-                    await authViewModel.signIn(context);
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Login failed: $e')),
-                    );
-                  }
+                  await authViewModel.signIn(context);
                 },
               ),
             ],

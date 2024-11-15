@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:taskapp/utils/colors.dart';
+import 'package:taskapp/utils/helper_functions.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/custom_button.dart';
@@ -11,9 +15,6 @@ class RegisterScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authViewModel = ref.read(authViewModelProvider.notifier);
-    final nameController = TextEditingController();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
 
     return Scaffold(
       backgroundColor: AppColors.grey,
@@ -44,18 +45,18 @@ class RegisterScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 20),
               CustomTextField(
-                controller: nameController,
+                controller: authViewModel.nameController,
                 label: 'Name',
                 prefixIcon: Icons.person,
               ),
               CustomTextField(
-                controller: emailController,
+                controller: authViewModel.emailController,
                 label: 'Email',
                 keyboardType: TextInputType.emailAddress,
                 prefixIcon: Icons.email,
               ),
               CustomTextField(
-                controller: passwordController,
+                controller: authViewModel.passwordController,
                 label: 'Password',
                 isPassword: true,
                 prefixIcon: Icons.lock,
@@ -64,18 +65,7 @@ class RegisterScreen extends ConsumerWidget {
               CustomButton(
                 text: 'Sign Up',
                 onPressed: () async {
-                  try {
-                    await authViewModel.signUp(
-                      nameController.text,
-                      emailController.text,
-                      passwordController.text,
-                    );
-                    Navigator.pushNamed(context, '/tasks');
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Sign up failed: $e')),
-                    );
-                  }
+                  await authViewModel.signUp(context);
                 },
               ),
               const SizedBox(height: 20),
@@ -83,11 +73,11 @@ class RegisterScreen extends ConsumerWidget {
                 alignment: Alignment.center,
                 child: TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/login');
+                    context.go('/login');
                   },
                   child: const Text(
                     'Already have an account? Login',
-                    style: TextStyle(color: AppColors.grey),
+                    style: TextStyle(color: AppColors.black),
                   ),
                 ),
               ),
